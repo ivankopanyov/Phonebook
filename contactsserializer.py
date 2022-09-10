@@ -1,53 +1,22 @@
-from phonebook import Contact
-from serializer import Serializer
-from os.path import exists
+from contact import Contact
+from abc import ABC, abstractmethod
 
-# Класс, описывающий объект сериализации контактов
-class ContactsSerializer(Serializer):
+# Абстрактный класс, описывающий сериалайзер контатов
+class ContactsSerializer(ABC):
 
-    # Метод сериализации контактов в xml
-    def serialize(self, objs_list: list[Contact]) -> None:
+    # Имя файла для чтения и записи
+    _file_name: str = None
 
-        with open(self._file_name, 'w') as file:
-            file.write('')
+    # Инициализация объекта сериалайзера
+    def __init__(self, file_name: str) -> None:
+        self._file_name = file_name
 
-        with open(self._file_name, 'a', encoding='utf8') as file:
-            for contact in objs_list:
-                data = f'''<Contact>
-    <name>{contact.get_name()}</name>
-    <surname>{contact.get_surname()}</surname>
-    <phone_number>{contact.get_phone_number()}</phone_number>
-    <address>{contact.get_address()}</address>
-</Contact>\n'''
-                file.write(data)
+    # Абстрактный метод серализации контактов
+    @abstractmethod
+    def serialize(self, contacts: list[Contact]) -> None:
+        pass
 
-    # Метод десериализации контактов из xml
+    # Абстрактный метод десерализации контактов
+    @abstractmethod
     def deserialize(self) -> list[Contact]:
-
-        if not exists(self._file_name):
-            return []
-        
-        is_write = False
-        contacts = []
-        name, surname, phone_number, address = None, None, None, None
-        with open(self._file_name, 'r', encoding='utf8') as file:
-            for line in file:
-                if line.find(f'</Contact>') != -1:
-                    is_write = False
-                    if name == None or surname == None or phone_number == None or address == None:
-                        continue
-                    contact = Contact(name, surname, phone_number, address)
-                    contacts.append(contact)
-                if is_write:
-                    if line.find('<name>') != -1:
-                        name = line.replace('<name>', '').replace('</name>', '').strip()
-                    if line.find('<surname>') != -1:
-                        surname = line.replace('<surname>', '').replace('</surname>', '').strip()
-                    if line.find('<phone_number>') != -1:
-                        phone_number = line.replace('<phone_number>', '').replace('</phone_number>', '').strip()
-                    if line.find('<address>') != -1:
-                        address = line.replace('<address>', '').replace('</address>', '').strip()
-                if line.find(f'<Contact>') != -1:
-                    name, surname, phone_number, address = None, None, None, None
-                    is_write = True
-        return contacts
+        pass

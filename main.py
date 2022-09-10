@@ -1,7 +1,7 @@
 from view import ConsoleView
 from phonebook import Phonebook
 from phonebookcontroller import PhonebookController
-from contactsserializer import ContactsSerializer
+from contactsxmlserializer import ContactsXmlSerializer
 from logger import Logger
 from traceback import format_exc
 
@@ -12,7 +12,7 @@ def main() -> None:
     try:
         phonebook = Phonebook()
         view = ConsoleView()
-        serializer = ContactsSerializer('contacts.xml')
+        serializer = ContactsXmlSerializer('contacts.xml')
         controller = PhonebookController(phonebook, view, serializer, logger)
         controller.get_start_menu()
     except Exception:
