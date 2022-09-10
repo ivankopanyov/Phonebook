@@ -6,7 +6,7 @@ from os.path import exists
 class ContactsXmlSerializer(ContactsSerializer):
 
     # Метод сериализации контактов в xml
-    def serialize(self, objs_list: list[Contact]) -> None:
+    def serialize(self, contacts_list: list[Contact]) -> None:
 
         with open(self._file_name, 'w') as file:
             file.write('')
@@ -15,7 +15,7 @@ class ContactsXmlSerializer(ContactsSerializer):
 
             file.write(f'<?xml version="1.0"?>\n<Phonebook>\n')
 
-            for contact in objs_list:
+            for contact in contacts_list:
                 data = f'''    <Contact>
         <name>{contact.get_name()}</name>
         <surname>{contact.get_surname()}</surname>
@@ -37,22 +37,22 @@ class ContactsXmlSerializer(ContactsSerializer):
         name, surname, phone_number, address = None, None, None, None
         with open(self._file_name, 'r', encoding='utf8') as file:
             for line in file:
-                if line.find(f'</Contact>') != -1:
+                if line.find(f'    </Contact>') == 0:
                     is_write = False
                     if name == None or surname == None or phone_number == None or address == None:
                         continue
                     contact = Contact(name, surname, phone_number, address)
                     contacts.append(contact)
                 if is_write:
-                    if line.find('<name>') != -1:
+                    if line.find('        <name>') == 0:
                         name = line.replace('<name>', '').replace('</name>', '').strip()
-                    if line.find('<surname>') != -1:
+                    if line.find('        <surname>') == 0:
                         surname = line.replace('<surname>', '').replace('</surname>', '').strip()
-                    if line.find('<phone_number>') != -1:
+                    if line.find('        <phone_number>') == 0:
                         phone_number = line.replace('<phone_number>', '').replace('</phone_number>', '').strip()
-                    if line.find('<address>') != -1:
+                    if line.find('        <address>') == 0:
                         address = line.replace('<address>', '').replace('</address>', '').strip()
-                if line.find(f'<Contact>') != -1:
+                if line.find(f'    <Contact>') == 0:
                     name, surname, phone_number, address = None, None, None, None
                     is_write = True
         return contacts
