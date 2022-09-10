@@ -1,7 +1,8 @@
 from view import ConsoleView
 from phonebook import Phonebook
 from phonebookcontroller import PhonebookController
-from contactsserializer import ContactsSerializer
+from contactsxmlserializer import ContactsXmlSerializer
+from contactsjsonserializer import ContactsJsonSerializer
 from logger import Logger
 from traceback import format_exc
 
@@ -12,8 +13,9 @@ def main() -> None:
     try:
         phonebook = Phonebook()
         view = ConsoleView()
-        serializer = ContactsSerializer('contacts.xml')
-        controller = PhonebookController(phonebook, view, serializer, logger)
+        jsonserializer = ContactsJsonSerializer('contacts.json')
+        xmlserializer = ContactsXmlSerializer('contacts.xml')
+        controller = PhonebookController(phonebook, view, jsonserializer, logger)
         controller.get_start_menu()
     except Exception:
         logger.write_log(format_exc())
