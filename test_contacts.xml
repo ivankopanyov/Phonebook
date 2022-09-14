@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<Phonebook>
+    <Contact>
+        <name>Тимофей</name>
+        <surname>Богданов</surname>
+        <phone_number>+79615783699</phone_number>
+        <email>mail@mail.ru</email>
+        <address>г. Москва</address>
+    </Contact>
+    <Contact>
+        <name>Ибрагим</name>
+        <surname>Абрамов</surname>
+        <phone_number>+79735672672</phone_number>
+        <email>mail@mail.ru</email>
+        <address>г. Москва</address>
+    </Contact>
+    <Contact>
+        <name>Роман</name>
+        <surname>Морозов</surname>
+        <phone_number>+79637260698</phone_number>
+        <email>mail@mail.ru</email>
+        <address>г. Москва</address>
+    </Contact>
+    <Contact>
+        <name>Александр</name>
+        <surname>Попов</surname>
+        <phone_number>+79697989104</phone_number>
+        <email>mail@mail.ru</email>
+        <address>г. Москва</address>
+    </Contact>
+    <Contact>
+        <name>Михаил</name>
+        <surname>Алексеев</surname>
+        <phone_number>+79220725972</phone_number>
+        <email>mail@mail.ru</email>
+        <address>г. Москва</address>
+    </Contact>
+    <Contact>
+        <name>Милана</name>
+        <surname>Никифорова</surname>
+        <phone_number>+79493325842</phone_number>
+        <email>mail@mail.ru</email>
+        <address>г. Москва</address>
+    </Contact>
+    <Contact>
+        <name>Александра</name>
+        <surname>Чернова</surname>
+        <phone_number>+79449999067</phone_number>
+        <email>mail@mail.ru</email>
+        <address>г. Москва</address>
+    </Contact>
+    <Contact>
+        <name>Александр</name>
+        <surname>Лебедев</surname>
+        <phone_number>+79176750240</phone_number>
+        <email>mail@mail.ru</email>
+        <address>г. Москва</address>
+    </Contact>
+    <Contact>
+        <name>Анна</name>
+        <surname>Софронова</surname>
+        <phone_number>+79405696271</phone_number>
+        <email>mail@mail.ru</email>
+        <address>г. Москва</address>
+    </Contact>
+    <Contact>
+        <name>Анастасия</name>
+        <surname>Васильева</surname>
+        <phone_number>+79403043683</phone_number>
+        <email>mail@mail.ru</email>
+        <address>г. Москва</address>
+    </Contact>
+    <Contact>
+        <name>Виктория</name>
+        <surname>Виноградова</surname>
+        <phone_number>+79877022891</phone_number>
+        <email>mail@mail.ru</email>
+        <address>г. Москва</address>
+    </Contact>
+    <Contact>
+        <name>Матвей</name>
+        <surname>Николаев</surname>
+        <phone_number>+79919137262</phone_number>
+        <email>mail@mail.ru</email>
+        <address>г. Москва</address>
+    </Contact>
+    <Contact>
+        <name>Анна</name>
+        <surname>Попова</surname>
+        <phone_number>+79511930387</phone_number>
+        <email>mail@mail.ru</email>
+        <address>г. Москва</address>
+    </Contact>
+    <Contact>
+        <name>Александра</name>
+        <surname>Громова</surname>
+        <phone_number>+79248643863</phone_number>
+        <email>mail@mail.ru</email>
+        <address>г. Москва</address>
+    </Contact>
+    <Contact>
+        <name>Анна</name>
+        <surname>Белякова</surname>
+        <phone_number>+79102129561</phone_number>
+        <email>mail@mail.ru</email>
+        <address>г. Москва</address>
+    </Contact>
+    <Contact>
+        <name>Елизавета</name>
+        <surname>Соловьева</surname>
+        <phone_number>+79905212729</phone_number>
+        <email>mail@mail.ru</email>
+        <address>г. Москва</address>
+    </Contact>
+    <Contact>
+        <name>Елизавета</name>
+        <surname>Субботина</surname>
+        <phone_number>+79903667908</phone_number>
+        <email>mail@mail.ru</email>
+        <address>г. Москва</address>
+    </Contact>
+    <Contact>
+        <name>Кристина</name>
+        <surname>Кузьмина</surname>
+        <phone_number>+79985436788</phone_number>
+        <email>mail@mail.ru</email>
+        <address>г. Москва</address>
+    </Contact>
+    <Contact>
+        <name>Злата</name>
+        <surname>Степанова</surname>
+        <phone_number>+79835378716</phone_number>
+        <email>mail@mail.ru</email>
+        <address>г. Москва</address>
+    </Contact>
+    <Contact>
+        <name>София</name>
+        <surname>Устинова</surname>
+        <phone_number>+79799541941</phone_number>
+        <email>mail@mail.ru</email>
+        <address>г. Москва</address>
+    </Contact>
+</Phonebook>
