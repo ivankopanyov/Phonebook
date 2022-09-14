@@ -1,124 +1,113 @@
-from repositorycontroller import RepositoryController
-from phonebook import Phonebook
-from view import View
+from phonebook import Phonebook, Contact
 from contactsserializer import ContactsSerializer
 from logger import Logger
-from contact import Contact
+from traceback import format_exc
 
 # Класс, описывающий контроллер для работы с телефонным справочником
-class PhonebookController(RepositoryController):
+class PhonebookController:
+
+    # Константы для сортировки списка контактов
+    NAME = 'name'
+    SURNAME = 'surname'
+    PHONE_NUMBER = 'phone_number'
+    
+    # Модель телефонного справочника
+    __phonebook: Phonebook
+
+    # Сериалайзеры телефонного справочника
+    __serializers: dict[str : ContactsSerializer]
+
+    # Логгер
+    __logger: Logger
+
+    # Текущее значение сортировки контактов
+    __sort: str = SURNAME
+
+    # Реверсивная сортировка
+    __reversed: bool = False
 
     # Инициализация объекта контроллера
-    def __init__(self, model: Phonebook, view: View, serializer: ContactsSerializer = None, logger: Logger = None) -> None:
-        super().__init__(model, view, serializer, logger)
+    def __init__(self, phonebook: Phonebook, serializers: dict[str : ContactsSerializer] = [], logger: Logger = None) -> None:
 
-        if self._serializer != None:
-            contacts = self._serializer.deserialize()
-            for contact in contacts:
-                self._model.add(contact)
+        self.__phonebook = phonebook
+        self.__serializers = serializers
+        self.__logger = logger
 
-    # Метод отображения стартово экрана
-    def get_start_menu(self) -> None:
-        while True:
-            self._view.new_screen()
-            menu_items = [
-                'Список контактов',
-                'Поиск контакта',
-                'Добавить контакт'
-            ]
-            num = self._view.output_menu(menu_items, back_name='Выход')
-
-            if num == -1:
-                return
-
-            if num == 0:
-                self.get_contacts(self._model.get_all())
-            elif num == 1:
-                self.find_contact()
-            elif num == 2:
-                self.add_contact()
-
-    # Метод вывода списка всех котактов телефонного справочника
-    def get_contacts(self, contacts: list[Contact]) -> None:
-        self._view.new_screen()
-        contacts_list = [f'{i.get_name()} {i.get_surname()} - {i.get_phone_number()}' for i in contacts]
-        if len(contacts_list) == 0:
-            self._view.output_message('Список контактов пуст!')
-            self._view.output_menu([])
-            return
-        
-        num = self._view.output_menu(contacts_list)
-
-        if num == -1:
-            return
-
-        self.get_contact_info(contacts[num])
-    
-    # Метод вывода полной информации о контакте
-    def get_contact_info(self, contact: Contact) -> None:
-        self._view.new_screen()
-        contact_dict = {
-            'Имя' : contact.get_name(),
-            'Фамилия' : contact.get_surname(),
-            'Телефон' : contact.get_phone_number(),
-            'Адрес' : contact.get_address()
-        }
-
-        self._view.output_dict(contact_dict)
-        num = self._view.output_menu(['Удалить контакт'])
-
-        if num == -1:
-            return
-
-        self.remove_contact(contact)
+    # Метод получения списка всех контактов из телефонного справочника
+    def get_all_contacts(self) -> list[Contact]:
+        return self._sort(self.__phonebook.get_all())
 
     # Метод добавления контакта в телефонный справочник
-    def add_contact(self) -> None:
-        self._view.new_screen()
-        name = self._view.input_str('Укажите имя: ')
-        surname = self._view.input_str('Укажите фамилию: ')
-        phone_number = self._view.input_str('Укажите телефон: ')
-        address = self._view.input_str('Укажите адрес: ')
+    def add_contact(self, contact: Contact) -> None:
+        self.__phonebook.add(contact)
+        if self.__logger != None:
+            self.__logger.write_log(f'Добавлен контакт {contact.to_str()}')
 
-        contact = Contact(name, surname, phone_number, address)
-        self._model.add(contact)
+    # Метод изменения информации о контакте
+    def change_contact(self, contact: Contact, name: str, surname: str, phone_number: str, email: str, address: str) -> None:
+        before = contact.to_str()
+        self.__phonebook.change_contact(contact, name, surname, phone_number, email, address)
+        if self.__logger != None:
+            self.__logger.write_log(f'Контакт {before} изменен на {contact.to_str()}')
 
-        if self._logger != None:
-            self._logger.write_log(f'Доавлен контакт {contact.to_str()}')
-        self.__save()
-        self._view.new_screen()
-        self._view.output_message(f'Контакт {name} {surname} успешно добавлен!')
-        self._view.output_menu([])
-
-    # Метод удаления контакта из телефонного справочника
+    # Метод удаления контакта
     def remove_contact(self, contact: Contact) -> None:
-        self._view.new_screen()
-        title = f'Вы уверены, что хотите удалить контакт {contact.get_name()} {contact.get_surname()}?'
-        num = self._view.output_menu(['Удалить'], title, 'Отмена')
+        self.__phonebook.remove(contact)
+        if self.__logger != None:
+            self.__logger.write_log(f'Удален контакт {contact.to_str()}')
 
-        if num == -1:
-            return
+    # Метод поиска контакта
+    def find_contact(self, pattern: str) -> list[Contact]:
+        pattern = pattern.lower()
+        contacts = list(filter(lambda i: i.to_str().lower().find(pattern) != -1, self.__phonebook.get_all()))
+        return self._sort(contacts)
 
-        self._model.remove(contact)
-        if self._logger != None:
-            self._logger.write_log(f'Удален контакт {contact.to_str()}')
-        self.__save()
-        self._view.new_screen()
-        self._view.output_message(f'Контакт {contact.get_name()} {contact.get_surname()} успешно удален!')
-        self._view.output_menu([])
+    # Метод экспорта списка контактов в файл
+    def export_contacts(self, file_name: str) -> bool:
+        extension = file_name.split('.')[-1]
+        for serializer in self.__serializers:
+            if serializer == extension:
+                try:
+                    self.__serializers[serializer].serialize(file_name, self.__phonebook.get_all())
+                    if self.__logger != None:
+                        self.__logger.write_log(f'Список контактов сохранен в файл {file_name}')
+                    return True
+                except Exception:
+                    if self.__logger != None:
+                        self.__logger.write_log(format_exc())
+                    continue
+        return False
 
-    # Метод поиска контакта в телефонном справочнике
-    def find_contact(self) -> None:
-        self._view.new_screen()
-        pattern = self._view.input_str('Укажите строку для поиска (минимум 3 символа): ', 3)
-        contacts = self._model.find(pattern)
-        if len(contacts) == 0:
-            self._view.output_message('Контакт не найден!')
-            self._view.output_menu([])
-            return
-        self.get_contacts(contacts)
+    # Метод импорта списка контактов из файла
+    def import_contacts(self, file_name: str) -> list[Contact]:
+        extension = file_name.split('.')[-1]
+        for serializer in self.__serializers:
+            if serializer == extension:
+                try:
+                    result = self.__serializers[serializer].deserialize(file_name)
+                    if len(result) == 0:
+                        return []
+                    if self.__logger != None:
+                        self.__logger.write_log(f'Список контактов загружен из файла {file_name}')
+                    return result
+                except Exception as e:
+                    if self.__logger != None:
+                        self.__logger.write_log(format_exc())
+                    continue
+        return []
 
-    # Метод сохранения списка контаков телефонного справочника в файл
-    def __save(self) -> None:
-        if self._serializer != None:
-            self._serializer.serialize(self._model.get_all())
+    # Метод изменения сортировки контактов
+    def set_sort(self, sort_name: str) -> None:
+        self.__reversed = not self.__reversed if sort_name == self.__sort else False
+        self.__sort = sort_name
+
+    # Метод сортировки контактов
+    def _sort(self, contacts: list[Contact]) -> list[Contact]:
+        if self.__sort == self.NAME:
+            contacts.sort(key=lambda contact: contact.get_name())
+        elif self.__sort == self.PHONE_NUMBER:
+            contacts.sort(key=lambda contact: contact.get_phone_number())
+        else:
+            contacts.sort(key=lambda contact: contact.get_surname())
+
+        return contacts if not self.__reversed else list(reversed(contacts))

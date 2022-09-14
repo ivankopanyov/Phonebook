@@ -1,5 +1,5 @@
-from view import ConsoleView
 from phonebook import Phonebook
+from gui import MainWindow
 from phonebookcontroller import PhonebookController
 from contactsxmlserializer import ContactsXmlSerializer
 from contactsjsonserializer import ContactsJsonSerializer
@@ -12,11 +12,13 @@ def main() -> None:
     logger.write_log('Запуск приложения')
     try:
         phonebook = Phonebook()
-        view = ConsoleView()
-        jsonserializer = ContactsJsonSerializer('contacts.json')
-        xmlserializer = ContactsXmlSerializer('contacts.xml')
-        controller = PhonebookController(phonebook, view, jsonserializer, logger)
-        controller.get_start_menu()
+        serializers = {
+            'xml' : ContactsXmlSerializer(),
+            'json' : ContactsJsonSerializer()
+        }
+        controller = PhonebookController(phonebook, serializers, logger)
+        view = MainWindow(' Телефонный справочник ', 600, 400, controller)
+        view.show()
     except Exception:
         logger.write_log(format_exc())
     logger.write_log('Выход из приложения')
